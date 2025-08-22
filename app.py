@@ -45,7 +45,7 @@ body {background-color: #0B0C10; color: #F0F0F0;}
 # -----------------------
 # Title
 # -----------------------
-st.title("🩺 Diabetes Risk Prediction App")
+st.title("🩺 Diabetes Risk Predictior")
 st.markdown("Estimate your **diabetes risk** based on lab values. This is **educational only**.")
 
 # -----------------------
