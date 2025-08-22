@@ -53,12 +53,14 @@ The **Community Diabetes Risk Prediction App** is an interactive web application
 
 ## 📂 Project Structure
 Diabetes-app/
+```bash
 ├─ app.py # Main Streamlit app
 ├─ train.py # Model training script
 ├─ diabetes_model.pkl # Trained ML pipeline
 ├─ requirements.txt # Python dependencies
 ├─ README.md
 └─ .gitignore
+```
 
 
 ---
