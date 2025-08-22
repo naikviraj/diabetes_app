@@ -6,7 +6,6 @@ import shap
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from io import BytesIO
-import numpy as np
 
 # -----------------------
 # Load model
@@ -46,7 +45,7 @@ body {background-color: #0B0C10; color: #F0F0F0;}
 # -----------------------
 # Title
 # -----------------------
-st.title("🩺Diabetes Risk Prediction App")
+st.title("🩺 Diabetes Risk Prediction App")
 st.markdown("Estimate your **diabetes risk** based on lab values. This is **educational only**.")
 
 # -----------------------
@@ -112,7 +111,7 @@ if submitted:
     </div>
     """,unsafe_allow_html=True)
 
-    # Animated probability chart
+    # Probability chart
     fig, ax = plt.subplots()
     bars = ax.bar(risk_map.values(), probas, color=[risk_colors[i] for i in range(3)])
     ax.set_ylabel("Probability")
@@ -122,16 +121,33 @@ if submitted:
         ax.text(bar.get_x() + bar.get_width()/2, prob + 0.02, f"{prob*100:.1f}%", ha="center", fontsize=12, color="#fff")
     st.pyplot(fig)
 
-    # SHAP Explanation
+    # -----------------------
+    # SHAP Explanation (readable)
+    # -----------------------
     st.subheader("🔎 Why this prediction?")
-    explainer = shap.TreeExplainer(model.named_steps["classifier"])
-    X_transformed = model.named_steps["preprocessor"].transform(data)
+    classifier = model.named_steps["classifier"]
+    preprocessor = model.named_steps["preprocessor"]
+    X_transformed = preprocessor.transform(data)
+    explainer = shap.TreeExplainer(classifier)
     shap_values = explainer.shap_values(X_transformed)
-    shap.summary_plot(shap_values,X_transformed,plot_type="bar",show=False)
+
+    # Feature names readable
+    feature_names = []
+    for name, transformer, columns in preprocessor.transformers_:
+        if name != "remainder":
+            if hasattr(transformer, 'get_feature_names_out'):
+                feature_names.extend(transformer.get_feature_names_out(columns))
+            else:
+                feature_names.extend(columns)
+    feature_names = [fn.replace("Gender_", "Gender: ") for fn in feature_names]
+
+    shap.summary_plot(shap_values, X_transformed, feature_names=feature_names, plot_type="bar", show=False)
     st.pyplot(plt.gcf(), bbox_inches="tight")
     plt.clf()
 
+    # -----------------------
     # Lifestyle suggestions
+    # -----------------------
     st.subheader("💡 Lifestyle Suggestions")
     suggestions = {
         0:"✅ Low Risk:\n- Continue healthy diet & exercise\n- Regular checkups",
@@ -140,7 +156,9 @@ if submitted:
     }
     st.markdown(f"<div class='card'>{suggestions[prediction].replace(chr(10),'<br>')}</div>",unsafe_allow_html=True)
 
+    # -----------------------
     # PDF download
+    # -----------------------
     st.subheader("📄 Download Report")
     def create_pdf(data,prediction,probas):
         buffer = BytesIO()
@@ -163,6 +181,8 @@ if submitted:
     st.download_button("⬇️ Download PDF Report",data=pdf_buffer,
                        file_name="diabetes_report.pdf",mime="application/pdf")
 
+# -----------------------
 # Footer
+# -----------------------
 st.markdown("---")
 st.caption("⚠️ Educational app only. Not a substitute for medical advice.")
