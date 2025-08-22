@@ -82,7 +82,7 @@ pip install -r requirements.txt
 
 # Run Streamlit app
 streamlit run app.py
-
+```
 👨‍⚕️ Disclaimer
 
 This app is for educational purposes only. Not a medical diagnostic tool. Always consult a healthcare professional for any medical concerns.
