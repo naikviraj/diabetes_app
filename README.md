@@ -52,4 +52,35 @@ The **Community Diabetes Risk Prediction App** is an interactive web application
 ---
 
 ## 📂 Project Structure
+Diabetes-app/
+├─ app.py # Main Streamlit app
+├─ train.py # Model training script
+├─ diabetes_model.pkl # Trained ML pipeline
+├─ requirements.txt # Python dependencies
+├─ README.md
+└─ .gitignore
 
+
+---
+
+## 🚀 How to Run Locally
+
+```bash
+# Clone the repo
+git clone https://github.com/yourusername/Diabetes-app.git
+cd Diabetes-app
+
+# Create virtual environment
+python -m venv .venv
+source .venv/bin/activate  # Linux/macOS
+.venv\Scripts\activate     # Windows
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Run Streamlit app
+streamlit run app.py
+
+👨‍⚕️ Disclaimer
+
+This app is for educational purposes only. Not a medical diagnostic tool. Always consult a healthcare professional for any medical concerns.
